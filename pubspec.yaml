@@ -1,0 +1,92 @@
+name: azooz
+description: A new Flutter project.
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.6 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.4
+  get_it:
+  # flutter_screenutil:
+  auto_route:
+  country_code_picker:
+  country_phone_code_picker: ^0.0.41
+  pin_code_fields:
+  logger: ^1.1.0
+  equatable:
+  json_annotation:
+  shared_preferences:
+  shimmer:
+  cached_network_image:
+  url_launcher:
+  hyperpay: ^1.0.0-dev.2
+  # device_info_plus: ^3.2.4
+  device_info_plus:
+  android_id:
+  provider:
+  flutter_typeahead:
+  carousel_slider:
+  google_maps_flutter:
+  clipboard:
+  fluttertoast:
+  flutter_svg:
+  # google_fonts:
+  easy_localization:
+  emoji_picker_flutter:
+  font_awesome_flutter:
+  keyboard_dismisser:
+  flutter_rating_bar:
+  animate_do:
+  flutter_zoom_drawer: ^2.2.2
+  loading_animation_widget:
+  dio:
+  http:
+  connectivity_plus:
+  internet_connection_checker:
+  json_serializable:
+  flutter_easyloading:
+  bottom_picker:
+  image_picker:
+  firebase_core:
+  firebase_messaging:
+  flutter_local_notifications: ^9.7.0
+  file_picker:
+  geolocator:
+  # geocoding:
+  sliver_tools: ^0.2.5
+  extended_sliver: ^2.0.1
+  sliver_header_delegate: ^0.0.5
+  auto_validate: ^2.0.0-nullsafety.0
+  intl:
+  fluentui_system_icons:
+  flutter_polyline_points:
+  # change_app_package_name: ^1.1.0
+  flutter_observer:
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  build_runner:
+  auto_route_generator:
+  flutter_lints:
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/images/brands/
+    - assets/images/meshwar_imgs/
+    - assets/svg/
+    - assets/locale/
+    - assets/map_style/map_style.txt
+
+  fonts:
+    - family: TheSans
+      fonts:
+        - asset: assets/fonts/TheSansPlain.otf

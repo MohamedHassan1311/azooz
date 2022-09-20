@@ -1,0 +1,1 @@
+enum RideTime { now, scheduled }

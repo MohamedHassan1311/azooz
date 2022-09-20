@@ -1,0 +1,14 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  errors:
+    must_be_immutable: ignore
+  exclude:
+    - android/**
+    - ios/**
+linter:
+  rules:
+    avoid_print: false
+    sized_box_for_whitespace: true
+    constant_identifier_names: false
+    non_constant_identifier_names: false
