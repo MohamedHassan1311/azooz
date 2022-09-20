@@ -347,7 +347,8 @@ class PaymentProvider extends ChangeNotifier with PaymentMixin {
   }
 
   @override
-  Future<PaymentStatusModel> getCreditStatus({required String transactionId}) async {
+  Future<PaymentStatusModel> getCreditStatus(
+      {required String transactionId}) async {
     print("I am from get credit status::!! : $transactionId");
     await _apiProvider.post(
       apiRoute: creditStatusURL,
@@ -371,7 +372,8 @@ class PaymentProvider extends ChangeNotifier with PaymentMixin {
     return _paymentStatusModel;
   }
 
-  Future<bool> payWithMada(PaymentCheckoutModel checkoutRequest, CheckOutRequest payRequest) async {
+  Future<bool> payWithMada(
+      PaymentCheckoutModel checkoutRequest, CheckOutRequest payRequest) async {
     bool isSuccess = false;
     customWaitingDialog(getItContext!);
     var platform = const MethodChannel('Hyperpay.demo.fultter/channel');
@@ -384,13 +386,15 @@ class PaymentProvider extends ChangeNotifier with PaymentMixin {
       print("0000000000");
       print(payRequest.toMap());
       dismissDialog(getItContext!);
-      final String result = await platform.invokeMethod('gethyperpayresponse',payRequest.toMap(),);
+      final String result = await platform.invokeMethod(
+        'gethyperpayresponse',
+        payRequest.toMap(),
+      );
 
       print("11111111111");
       print("Transaction status: $transactionStatus");
       transactionStatus = result;
     } on PlatformException catch (e) {
-
       print("2222222222");
       dismissDialog(getItContext!);
       transactionStatus = "${e.message}";
@@ -418,98 +422,97 @@ class PaymentProvider extends ChangeNotifier with PaymentMixin {
     }
     return isSuccess;
   }
+
   HyperpayPlugin? hyperpay;
   String sessionCheckoutID = '';
-  Future<bool> payWithHyperPay(PaymentCheckoutModel checkoutRequest, CheckOutRequest payRequest,BrandType brandType )async{
+  Future<bool> payWithHyperPay(PaymentCheckoutModel checkoutRequest,
+      CheckOutRequest payRequest, BrandType brandType) async {
     bool isDone = false;
     print("Start");
-    hyperpay=await HyperpayPlugin.setup(config: TestConfig());
+    hyperpay = await HyperpayPlugin.setup(config: TestConfig());
     CardInfo card = CardInfo(
       holder: payRequest.holderName.toString(),
       cardNumber: payRequest.cardNumber.toString(),
       cvv: payRequest.cvv.toString(),
       expiryMonth: payRequest.month.toString(),
-      expiryYear:payRequest.year.toString(),
+      expiryYear: payRequest.year.toString(),
     );
-print("Card Data"+ card.toMap().toString());
+    print("Card Data" + card.toMap().toString());
 
-      try {
-        // Start transaction
-        if (sessionCheckoutID.isEmpty) {
-          // Only get a new checkoutID if there is no previous session pending now
-
-          await initPaymentSession(brandType, payRequest.amount!);
-        }
-
-        final result = await hyperpay!.pay(card);
-
-        switch (result) {
-          case PaymentStatus.init:
-            print('Payment pending ⏳');
-            break;
-        // For the sake of the example, the 2 cases are shown explicitly
-        // but in real world it's better to merge pending with successful
-        // and delegate the job from there to the server, using webhooks
-        // to get notified about the final status and do some action.
-          case PaymentStatus.pending:
-            print('Payment pending ⏳');
-
-            break;
-          case PaymentStatus.successful:
-            sessionCheckoutID = '';
-            print('Payment approved 🎉');
-            isDone= true;
-            notifyListeners();
-
-
-            break;
-
-          default:
-        }
-      } on HyperpayException catch (exception) {
-        sessionCheckoutID = '';
-        isDone= false;
-        notifyListeners();
-
-      } catch (exception) {
-        print(exception);
+    try {
+      // Start transaction
+      if (sessionCheckoutID.isEmpty) {
+        await initPaymentSession(brandType, payRequest.amount!);
       }
 
-return isDone;
+      final result = await hyperpay!.pay(card);
 
+      switch (result) {
+        case PaymentStatus.init:
+          print('Payment init ⏳');
+          break;
+
+        case PaymentStatus.pending:
+
+          print('Payment pending ⏳');
+
+          break;
+        case PaymentStatus.successful:
+          sessionCheckoutID = '';
+          print('Payment approved 🎉');
+          isDone = true;
+          notifyListeners();
+
+          break;
+
+        default:
+      }
+    } on HyperpayException catch (exception) {
+      sessionCheckoutID = '';
+      isDone = false;
+      notifyListeners();
+    } catch (exception) {
+      isDone = false;
+      notifyListeners();
+      print(exception);
+    }
+
+    return isDone;
   }
+
   /// Initialize HyperPay session
   Future<void> initPaymentSession(
-      BrandType brandType,
-      double amount,
-      ) async {
+    BrandType brandType,
+    double amount,
+  ) async {
     CheckoutSettings _checkoutSettings = CheckoutSettings(
       brand: brandType,
       amount: amount,
-
       headers: {
         'Content-Type': 'application/json',
-        "Authorization" : 'Bearer OGFjZGE0Yzk4MjYyYTAzZTAxODI3NDI0ZmRhYzVjNTd8Y1o3Y3llQVJXZQ=='
+        "Authorization":
+            'Bearer OGFjZGE0Yzk4MjYyYTAzZTAxODI3NDI0ZmRhYzVjNTd8Y1o3Y3llQVJXZQ=='
       },
-
     );
 
     hyperpay!.initSession(checkoutSetting: _checkoutSettings);
     sessionCheckoutID = await hyperpay!.getCheckoutID;
   }
 
-
-  Future<bool> payWithMaster(PaymentCheckoutModel checkoutRequest, CheckOutRequest payRequest) async {
-
- return  await payWithHyperPay(checkoutRequest,payRequest,BrandType.mastercard);
-
+  Future<bool> payWithMaster(
+      PaymentCheckoutModel checkoutRequest, CheckOutRequest payRequest) async {
+    return await payWithHyperPay(
+        checkoutRequest, payRequest, BrandType.mastercard);
   }
 
-  Future<bool> payWithVisa(PaymentCheckoutModel checkoutRequest,CheckOutRequest payRequest,) async {
+  Future<bool> payWithVisa(
+    PaymentCheckoutModel checkoutRequest,
+    CheckOutRequest payRequest,
+  ) async {
     late bool isSuccess;
-    return  await payWithHyperPay(checkoutRequest,payRequest,BrandType.visa);
-
+    return await payWithHyperPay(checkoutRequest, payRequest, BrandType.visa);
   }
+
   // PaymentCheckoutModel checkoutRequest,
   Future<bool> stcPayPayment(CheckOutRequest payRequest) async {
     bool isSuccess = false;
@@ -522,7 +525,10 @@ return isDone;
       print("Stape 1");
       notifyListeners();
       print("Stape 2");
-      final String result = await platform.invokeMethod('gethyperpayresponse',payRequest.toMap(),);
+      final String result = await platform.invokeMethod(
+        'gethyperpayresponse',
+        payRequest.toMap(),
+      );
 
       print("Stape 3");
       print("Payment result:: $result ##");
@@ -543,9 +549,11 @@ return isDone;
         transactionStatus == "SYNC") {
       //print("transactionStatus::transactionId ${checkoutid.result!.transactionId}");
       print("transactionStatus::stcPayPayment $transactionStatus");
-      await getCreditStatus(transactionId: payRequest.checkoutid.toString()).then((value) {
+      await getCreditStatus(transactionId: payRequest.checkoutid.toString())
+          .then((value) {
         print("transactionStatus::stcPayPaymentvalue $value");
-        if (value.result?.message == "Done" ||value.result?.message == "scuccess") {
+        if (value.result?.message == "Done" ||
+            value.result?.message == "scuccess") {
           print("object::: ${value.result?.message}");
           isSuccess = true;
           notifyListeners();
@@ -569,7 +577,8 @@ return isDone;
     return isSuccess;
   }
 
-  Future<bool> applePayPayment(PaymentCheckoutModel checkoutRequest, CheckOutRequest payRequest) async {
+  Future<bool> applePayPayment(
+      PaymentCheckoutModel checkoutRequest, CheckOutRequest payRequest) async {
     bool isDone = false;
     if (sessionCheckoutID.isEmpty) {
       // Only get a new checkoutID if there is no previous session pending now
@@ -586,11 +595,11 @@ return isDone;
     try {
       await hyperpay!.payWithApplePay(applePaySettings);
     } catch (exception) {
-      isDone= false;
+      isDone = false;
       notifyListeners();
       print("Apple Pay exception:: $exception");
     } finally {
-      isDone= false;
+      isDone = false;
       notifyListeners();
     }
     print("Last done:: $isDone");

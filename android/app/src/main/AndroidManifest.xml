@@ -16,7 +16,12 @@
 
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyD4Uvka9U9mGcLA-LMg6d0wlhR_07bKF8s" />
 
-        <activity android:name=".MainActivity" android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" android:exported="true" android:hardwareAccelerated="true" android:launchMode="singleTask" android:theme="@style/LaunchTheme" android:windowSoftInputMode="adjustResize">
+        <activity android:name=".MainActivity"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:exported="true" android:hardwareAccelerated="true"
+            android:launchMode="singleTask"
+            android:theme="@style/LaunchTheme"
+            android:windowSoftInputMode="adjustResize">
             <meta-data android:name="io.flutter.embedding.android.NormalTheme" android:resource="@style/NormalTheme" />
 
             <intent-filter>
@@ -27,26 +32,44 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="MainActivity" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+<!--            <intent-filter>-->
+<!--                <action android:name="MainActivity" />-->
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--            </intent-filter>-->
 
 
         </activity>
 
 
 
-        <receiver android:name=".CheckoutBroadcastReceiver" android:exported="true" />
+<!--        <receiver android:name=".CheckoutBroadcastReceiver" android:exported="true" />-->
 
-        <service android:name="com.oppwa.mobile.connect.service.ConnectService" android:exported="false" />
+<!--        <service android:name="com.oppwa.mobile.connect.service.ConnectService" android:exported="false" />-->
+<!--        <activity-->
+<!--            android:name="com.oppwa.mobile.connect.checkout.dialog.CheckoutActivity"-->
+<!--            android:launchMode="singleTask">-->
 
-        <activity android:name="com.oppwa.mobile.connect.checkout.dialog.CheckoutActivity" android:configChanges="orientation" android:exported="false" android:launchMode="singleTop" android:theme="@style/Theme.Checkout.Light" android:windowSoftInputMode="adjustPan" tools:replace="android:windowSoftInputMode"/>
+<!--            <intent-filter>-->
+<!--                <data android:scheme="com.azooz.user.payments"/>-->
+
+<!--                <action android:name="android.intent.action.VIEW"/>-->
+
+<!--                <category android:name="android.intent.category.DEFAULT"/>-->
+<!--                <category android:name="android.intent.category.BROWSABLE"/>-->
+<!--            </intent-filter>-->
+<!--        </activity>-->
+        <!--<activity android:name="com.oppwa.mobile.connect.checkout.dialog.CheckoutActivity"
+            android:configChanges="orientation"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.Checkout.Light"
+            android:windowSoftInputMode="adjustPan"
+            tools:replace="android:windowSoftInputMode"/>-->
 
         <meta-data android:name="flutterEmbedding" android:value="2" />
         <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="MainActivity" />
