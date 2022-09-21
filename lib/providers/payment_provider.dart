@@ -372,64 +372,16 @@ class PaymentProvider extends ChangeNotifier with PaymentMixin {
     return _paymentStatusModel;
   }
 
-  Future<bool> payWithMada(
-      PaymentCheckoutModel checkoutRequest, CheckOutRequest payRequest) async {
-    bool isSuccess = false;
-    customWaitingDialog(getItContext!);
-    var platform = const MethodChannel('Hyperpay.demo.fultter/channel');
-    //TransactionIdModel checkoutid = await getCheckoutId(checkoutModel: checkoutRequest);
 
-    print("##Checkout id::: ${payRequest.checkoutid.toString()}");
-
-    String? transactionStatus;
-    try {
-      print("0000000000");
-      print(payRequest.toMap());
-      dismissDialog(getItContext!);
-      final String result = await platform.invokeMethod(
-        'gethyperpayresponse',
-        payRequest.toMap(),
-      );
-
-      print("11111111111");
-      print("Transaction status: $transactionStatus");
-      transactionStatus = result;
-    } on PlatformException catch (e) {
-      print("2222222222");
-      dismissDialog(getItContext!);
-      transactionStatus = "${e.message}";
-    }
-
-    print("3333333333");
-    if (transactionStatus.isNotEmpty && transactionStatus == "success" ||
-        transactionStatus == "SYNC") {
-      await getCreditStatus(transactionId: payRequest.checkoutid!)
-          .then((value) {
-        if (value.result?.message == "Done" ||
-            value.result?.message == "scuccess") {
-          isSuccess = true;
-          notifyListeners();
-        } else {
-          isSuccess = false;
-          notifyListeners();
-        }
-      });
-    } else {
-      var resultText = transactionStatus;
-      print("resultText $resultText");
-      isSuccess = false;
-      notifyListeners();
-    }
-    return isSuccess;
-  }
 
   HyperpayPlugin? hyperpay;
   String sessionCheckoutID = '';
   Future<bool> payWithHyperPay(PaymentCheckoutModel checkoutRequest,
       CheckOutRequest payRequest, BrandType brandType) async {
+    sessionCheckoutID = '';
     bool isDone = false;
     print("Start");
-    hyperpay = await HyperpayPlugin.setup(config: TestConfig());
+    hyperpay = await HyperpayPlugin.setup(config:TestConfig());
     CardInfo card = CardInfo(
       holder: payRequest.holderName.toString(),
       cardNumber: payRequest.cardNumber.toString(),
@@ -444,7 +396,7 @@ class PaymentProvider extends ChangeNotifier with PaymentMixin {
       if (sessionCheckoutID.isEmpty) {
         await initPaymentSession(brandType, payRequest.amount!);
       }
-
+      logger.d("pay Start");
       final result = await hyperpay!.pay(card);
 
       switch (result) {
@@ -490,8 +442,9 @@ class PaymentProvider extends ChangeNotifier with PaymentMixin {
       amount: amount,
       headers: {
         'Content-Type': 'application/json',
-        "Authorization":
-            'Bearer OGFjZGE0Yzk4MjYyYTAzZTAxODI3NDI0ZmRhYzVjNTd8Y1o3Y3llQVJXZQ=='
+        "Authorization" : paymentAuthHeader
+
+
       },
     );
 
@@ -504,12 +457,64 @@ class PaymentProvider extends ChangeNotifier with PaymentMixin {
     return await payWithHyperPay(
         checkoutRequest, payRequest, BrandType.mastercard);
   }
-
+  Future<bool> payWithMada(
+      PaymentCheckoutModel checkoutRequest, CheckOutRequest payRequest) async {
+    bool isSuccess = false;
+    customWaitingDialog(getItContext!);
+    return     await payWithHyperPay(
+        checkoutRequest, payRequest, BrandType.mada);
+    // var platform = const MethodChannel('Hyperpay.demo.fultter/channel');
+    // //TransactionIdModel checkoutid = await getCheckoutId(checkoutModel: checkoutRequest);
+    //
+    // print("##Checkout id::: ${payRequest.checkoutid.toString()}");
+    //
+    // String? transactionStatus;
+    // try {
+    //   print("0000000000");
+    //   print(payRequest.toMap());
+    //   dismissDialog(getItContext!);
+    //   final String result = await platform.invokeMethod(
+    //     'gethyperpayresponse',
+    //     payRequest.toMap(),
+    //   );
+    //
+    //   print("11111111111");
+    //   print("Transaction status: $transactionStatus");
+    //   transactionStatus = result;
+    // } on PlatformException catch (e) {
+    //   print("2222222222");
+    //   dismissDialog(getItContext!);
+    //   transactionStatus = "${e.message}";
+    // }
+    //
+    // print("3333333333");
+    // if (transactionStatus.isNotEmpty && transactionStatus == "success" ||
+    //     transactionStatus == "SYNC") {
+    //   await getCreditStatus(transactionId: payRequest.checkoutid!)
+    //       .then((value) {
+    //     if (value.result?.message == "Done" ||
+    //         value.result?.message == "scuccess") {
+    //       isSuccess = true;
+    //       notifyListeners();
+    //     } else {
+    //       isSuccess = false;
+    //       notifyListeners();
+    //     }
+    //   });
+    // } else {
+    //   var resultText = transactionStatus;
+    //   print("resultText $resultText");
+    //   isSuccess = false;
+    //   notifyListeners();
+    // }
+    // return isSuccess;
+  }
   Future<bool> payWithVisa(
     PaymentCheckoutModel checkoutRequest,
     CheckOutRequest payRequest,
   ) async {
     late bool isSuccess;
+    // customWaitingDialog(getItContext!);
     return await payWithHyperPay(checkoutRequest, payRequest, BrandType.visa);
   }
 

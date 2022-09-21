@@ -34,6 +34,7 @@ class LiveConfig implements HyperpayConfig {
 // https://wordpresshyperpay.docs.oppwa.com/tutorials/mobile-sdk/integration/server.
 
 String _host = 'demo.iselh.com';
+const paymentAuthHeader= 'Bearer OGFjZGE0Yzk4MjYyYTAzZTAxODI3NDI0ZmRhYzVjNTd8Y1o3Y3llQVJXZQ==';
 
 Uri _checkoutEndpoint = Uri(
   scheme: 'https',

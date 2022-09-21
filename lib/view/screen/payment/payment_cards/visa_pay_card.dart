@@ -1,3 +1,4 @@
+import 'package:azooz/common/config/tools.dart';
 import 'package:azooz/common/payment_consts.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -274,13 +275,13 @@ class VisaPayCardState extends State<VisaPayCard> {
                             mode: "",
                             orderId: widget.id,
                           );
-                          final TransactionIdModel checkoutid = await context
-                              .read<PaymentProvider>()
-                              .getCheckoutId(checkoutModel: checkoutRequest);
+                          // final TransactionIdModel checkoutid = await context
+                          //     .read<PaymentProvider>()
+                          //     .getCheckoutId(checkoutModel: checkoutRequest);
 
                           final CheckOutRequest payRequest = CheckOutRequest(
                             type: "CustomUI",
-                            checkoutid: checkoutid.result!.transactionId,
+                            checkoutid: "checkoutid.result!.transactionId",
                             mode: "LIVE",
                             brand: PaymentMethodsEnum.VISA.name,
                             cardNumber: _cardNumberController.text.trim(),
@@ -304,13 +305,17 @@ class VisaPayCardState extends State<VisaPayCard> {
                               context.read<PaymentProvider>().clear();
                               clearAll();
                               Navigator.of(context).pop();
-
-                              creditStatusDialog(context).then(
-                                (value) => routerPushAndPopUntil(
-                                  context: context,
-                                  route: const HomeRoute(),
-                                ),
-                              );
+                              if (value) {
+                                creditStatusDialog(context).then(
+                                  (value) => routerPushAndPopUntil(
+                                    context: context,
+                                    route: const HomeRoute(),
+                                  ),
+                                );
+                              } else {
+                                rechargeWalletFailure(context);
+                                logger.d('erorr');
+                              }
                             },
                           );
                         }
